@@ -1,6 +1,12 @@
 .DS_Store
 Gemfile.lock
 Cheffile.lock
+Berksfile.lock
 examples/cookbooks
 examples/tmp
+examples/ssl/ssl.json
+examples/ssl/server
+examples/ssl/client
+examples/ssl/sensu_ca
 .vagrant
+\#*

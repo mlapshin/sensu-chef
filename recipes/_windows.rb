@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sensu
-# Recipe:: client
+# Recipe:: _windows
 #
 # Copyright 2012, Sonian Inc.
 #
@@ -17,9 +17,20 @@
 # limitations under the License.
 #
 
-service "sensu-client" do
-  provider node.platform =~ /ubuntu|debian/ ? Chef::Provider::Service::Init::Debian : Chef::Provider::Service::Init::Redhat
-  supports :status => true, :restart => true
-  action [:enable, :start]
-  subscribes :restart, resources("ruby_block[sensu_service_trigger]"), :delayed
+windows_package "Sensu" do
+  source "http://repos.sensuapp.org/msi/sensu-#{node.sensu.version}.msi"
+  version node.sensu.version.gsub("-", ".")
+end
+
+service_definition = "C:\\opt\\sensu\\bin\\sensu-client.xml"
+
+execute "sensu-client.exe install" do
+  cwd "C:\\opt\\sensu\\bin"
+  action :nothing
+end
+
+template service_definition do
+  source "sensu.xml.erb"
+  variables :service => "sensu-client", :name => "Sensu Client"
+  notifies :run, "template[#{service_definition}]", :immediately
 end

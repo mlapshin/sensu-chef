@@ -1,11 +1,10 @@
-## most of these values can be replaced with your method of discovery
-
 # installation
-default.sensu.version = "0.9.7-1"
-default.sensu.package.unstable = false
+default.sensu.version = "0.9.11-1"
+default.sensu.use_unstable_repo = false
 default.sensu.directory = "/etc/sensu"
-default.sensu.log.directory = "/var/log/sensu"
-default.sensu.ssl = true
+default.sensu.log_directory = "/var/log/sensu"
+default.sensu.use_ssl = true
+default.sensu.use_embedded_ruby = false
 
 # rabbitmq
 default.sensu.rabbitmq.host = "localhost"
@@ -24,9 +23,7 @@ default.sensu.api.host = "localhost"
 default.sensu.api.port = 4567
 
 # dashboard
+default.sensu.dashboard.bind = "0.0.0.0"
 default.sensu.dashboard.port = 8080
 default.sensu.dashboard.user = "admin"
 default.sensu.dashboard.password = "secret"
-
-# client
-default.sensu.client = Hash.new

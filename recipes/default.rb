@@ -26,23 +26,22 @@ end
 
 case node.platform
 when "windows"
-  include_recipe "sensu::windows"
+  include_recipe "sensu::_windows"
 else
-  include_recipe "sensu::linux"
+  include_recipe "sensu::_linux"
 end
 
 [
   File.join(node.sensu.directory, "conf.d"),
-  node.sensu.log.directory
+  node.sensu.log_directory
 ].each do |dir|
   directory dir do
     recursive true
-    owner "sensu"
     mode 0755
   end
 end
 
-if node.sensu.ssl
+if node.sensu.use_ssl
   node.set.sensu.rabbitmq.ssl.cert_chain_file = File.join(node.sensu.directory, "ssl", "cert.pem")
   node.set.sensu.rabbitmq.ssl.private_key_file = File.join(node.sensu.directory, "ssl", "key.pem")
 
@@ -60,12 +59,11 @@ if node.sensu.ssl
     mode 0644
   end
 else
-  node.sensu.rabbitmq.delete(:ssl)
-
+  node.set.sensu.rabbitmq.ssl = nil
   if node.sensu.rabbitmq.port == 5671
     Chef::Log.warn("Setting Sensu RabbitMQ port to 5672 as you have disabled SSL.")
     node.set.sensu.rabbitmq.port = 5672
   end
 end
 
-sensu_config node.name
+sensu_base_config node.name

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sensu
-# Recipe:: default
+# Recipe:: dashboard_service
 #
 # Copyright 2012, Sonian Inc.
 #
@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
-gem_package "sensu" do
-  version node.sensu.version.split("-").first
+service "sensu-dashboard" do
+  provider node.platform_family =~ /debian/ ? Chef::Provider::Service::Init::Debian : Chef::Provider::Service::Init::Redhat
+  supports :status => true, :restart => true
+  action [:enable, :start]
+  subscribes :restart, resources("ruby_block[sensu_service_trigger]"), :delayed
 end
